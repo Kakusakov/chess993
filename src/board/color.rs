@@ -6,8 +6,6 @@ pub enum Color {
     White,
 }
 
-from_u8!(Color);
-
 impl std::ops::Not for Color {
     type Output = Self;
 

@@ -9,5 +9,3 @@ pub enum Piece {
     Queen,
     King,
 }
-
-from_u8!(Piece);
