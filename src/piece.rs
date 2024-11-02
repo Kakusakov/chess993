@@ -1,6 +1,6 @@
-use enum_iterator::*;
+use strum::EnumCount;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Sequence)]
+#[derive(Debug, Clone, Copy, EnumCount)]
 pub enum Piece {
     Pawn,
     Knight,
