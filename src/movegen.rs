@@ -2,7 +2,7 @@ use std::ops::BitAnd;
 
 use crate::color::Color;
 use crate::bitboard::BitBoard;
-use crate::square::{File, PosDiag, Rank, Square};
+use crate::square::{File, Rank, Square};
 
 #[derive(Debug)]
 pub struct Movegen;
@@ -58,25 +58,25 @@ impl Movegen {
 impl Movegen {
     const fn pos_diag_attacks(from: Square, occ: BitBoard) -> BitBoard {
         let mask = BitBoard::from_pos_diag(from.pos_diag());
-        let occ_6bit = Self::cut_6bits(mask.bitand(occ).project_on_rank());
+        let occ_6bit = Self::inner_6bits(mask.bitand(occ).project_on_rank());
         mask.bitand(Self::fill_up_attack(from.file(), occ_6bit))
     }
     const fn neg_diag_attacks(from: Square, occ: BitBoard) -> BitBoard {
         let mask = BitBoard::from_neg_diag(from.neg_diag());
-        let occ_6bit = Self::cut_6bits(mask.bitand(occ).project_on_rank());
+        let occ_6bit = Self::inner_6bits(mask.bitand(occ).project_on_rank());
         mask.bitand(Self::fill_up_attack(from.file(), occ_6bit))
     }
     const fn rank_attacks(from: Square, occ: BitBoard) -> BitBoard {
         let mask = BitBoard::from_rank(from.rank());
-        let occ_6bit = Self::cut_6bits(mask.bitand(occ).project_on_rank());
+        let occ_6bit = Self::inner_6bits(mask.bitand(occ).project_on_rank());
         mask.bitand(Self::fill_up_attack(from.file(), occ_6bit))
     }
     const fn file_attack(from: Square, occupance: BitBoard) -> BitBoard {
         let rank = from.rank();
         let file = from.file();
-        let file_occ = BitBoard::FILE_A.bitand(occupance.shr(file as u8));
+        let file_occ = BitBoard::from_file(File::A).bitand(occupance.shr(file as u8));
         let rev_occ = file_occ.file_to_reversed_rank();
-        let rev_occ_6bit = Self::cut_6bits(rev_occ);
+        let rev_occ_6bit = Self::inner_6bits(rev_occ);
         Self::file_a_attack(rank, rev_occ_6bit).shl(file as u8)
     }
     const fn fill_up_attack(file: File, occ_6bit: u8) -> BitBoard {
@@ -92,8 +92,8 @@ impl Movegen {
         let slider = BitBoard::from_square(Square::straights(rank, File::A));
         slider.attack_up(occ).bitor(slider.attack_down(occ))
     }
-    const fn cut_6bits(bb_rank: BitBoard) -> u8 {
-        assert!(bb_rank.bitand(BitBoard::RANK_ONE.not()).is_empty());
-        bb_rank.bitand(BitBoard::H1.not()).shr(1).0 as u8
+    const fn inner_6bits(bb_rank: BitBoard) -> u8 {
+        assert!(bb_rank.bitand(BitBoard::from_rank(Rank::One).not()).is_empty());
+        bb_rank.bitand(BitBoard::from_square(Square::H1).not()).shr(1).0 as u8
     }
 }
