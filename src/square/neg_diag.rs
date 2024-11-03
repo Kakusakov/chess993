@@ -2,7 +2,7 @@ use constmuck::{Contiguous, contiguous};
 use strum::{EnumCount, VariantArray};
 
 #[repr(i8)]
-#[derive(Debug, Clone, Copy, EnumCount, VariantArray, Contiguous)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, EnumCount, VariantArray, Contiguous)]
 pub enum NegDiag {
     A1A1 = -7,
     A2B1,

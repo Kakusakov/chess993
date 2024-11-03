@@ -2,7 +2,7 @@ use constmuck::{Contiguous, contiguous};
 use strum::{EnumCount, VariantArray};
 
 #[repr(i8)]
-#[derive(Debug, Clone, Copy, EnumCount, VariantArray, Contiguous)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, EnumCount, VariantArray, Contiguous)]
 pub enum PosDiag {
     H1H1 = -7,
     G1H2,

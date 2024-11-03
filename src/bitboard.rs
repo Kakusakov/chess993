@@ -262,6 +262,30 @@ impl BitBoard {
     pub const fn has_square(self, sq: Square) -> bool {
         !self.bitand(Self::from_square(sq)).is_empty()
     }
+    pub const fn population(self) -> u32 {
+        self.0.count_ones()
+    }
+    pub const fn first_bit(self) -> Option<Self> {
+        if self.is_empty() {
+            return None;
+        }
+        Some(self.bitand(self.neg()))
+    }
+    pub const fn first_square(self) -> Option<Square> {
+        if self.is_empty() {
+            return None;
+        }
+        match Square::from_u8(self.0.trailing_zeros() as u8) {
+            Some(result) => Some(result),
+            None => unreachable!()
+        }
+    }
+    pub const fn bits(self) -> Bits {
+        Bits(self)
+    }
+    pub const fn squares(self) -> Squares {
+        Squares(self)
+    }
     pub const fn fill_up(self) -> Self {
         self.mul(Self::from_file(File::A))
     }
@@ -321,4 +345,30 @@ impl BitBoard {
     //     .mul(Self(0x0101010101010101))
     //     .shl(56)
     // }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Bits(pub BitBoard);
+
+impl Iterator for Bits {
+    type Item = BitBoard;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let bb = self.0.first_bit()?;
+        self.0 ^= bb;
+        Some(bb)
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Squares(pub BitBoard);
+
+impl Iterator for Squares {
+    type Item = Square;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let sq = self.0.first_square()?;
+        self.0 ^= BitBoard::from(sq);
+        Some(sq)
+    }
 }

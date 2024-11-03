@@ -1,3 +1,5 @@
+#![feature(const_for)]
+
 mod square;
 mod bitboard;
 mod color;
