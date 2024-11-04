@@ -13,9 +13,3 @@ pub enum Rank {
     Seven,
     Eight,
 }
-
-impl Rank {
-    pub const fn from_u8(value: u8) -> Option<Self> {
-        contiguous::from_integer(value)
-    }
-}

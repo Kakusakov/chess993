@@ -18,11 +18,8 @@ impl Not for Color {
 }
 
 impl Color {
-    pub const fn from_u8(value: u8) -> Option<Self> {
-        contiguous::from_integer(value)
-    }
     pub const fn not(self) -> Self {
-        match Self::from_u8(self as u8 ^ 0x1) {
+        match contiguous::from_integer(self as u8 ^ 0x1) {
             Some(result) => result,
             None => unreachable!(),
         }

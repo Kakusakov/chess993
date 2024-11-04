@@ -13,9 +13,3 @@ pub enum File {
     G,
     H,
 }
-
-impl File {
-    pub const fn from_u8(value: u8) -> Option<Self> {
-        contiguous::from_integer(value)
-    }
-}

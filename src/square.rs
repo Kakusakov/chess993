@@ -59,36 +59,36 @@ impl Square {
         }
     }
     pub const fn diagonals(pos: PosDiag, neg: NegDiag) -> Self {
-        let rank = match Rank::from_u8((neg as i8 + 7 + pos as i8) as u8 / 2) {
+        let rank = match contiguous::from_integer((neg as i8 + 7 + pos as i8) as u8 / 2) {
             Some(result) => result,
             None => unreachable!()
         };
-        let file = match File::from_u8((neg as i8 + 7 - pos as i8) as u8 / 2) {
+        let file = match contiguous::from_integer((neg as i8 + 7 - pos as i8) as u8 / 2) {
             Some(result) => result,
             None => unreachable!()
         };
         Self::straights(rank, file)
     }
     pub const fn rank(self) -> Rank {
-        match Rank::from_u8(self as u8 / 8) {
+        match contiguous::from_integer(self as u8 / 8) {
             Some(result) => result,
             None => unreachable!()
         }
     }
     pub const fn file(self) -> File {
-        match File::from_u8(self as u8 % 8) {
+        match contiguous::from_integer(self as u8 % 8) {
             Some(result) => result,
             None => unreachable!()
         }
     }
     pub const fn pos_diag(self) -> PosDiag {
-        match PosDiag::from_i8(self.rank() as i8 - self.file() as i8) {
+        match contiguous::from_integer(self.rank() as i8 - self.file() as i8) {
             Some(result) => result,
             None => unreachable!()
         }
     }
     pub const fn neg_diag(self) -> NegDiag {
-        match NegDiag::from_i8(self.rank() as i8 + self.file() as i8 - 7) {
+        match contiguous::from_integer(self.rank() as i8 + self.file() as i8 - 7) {
             Some(result) => result,
             None => unreachable!()
         }

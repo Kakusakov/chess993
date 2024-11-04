@@ -20,9 +20,3 @@ pub enum NegDiag {
     G8H7,
     H8H8,
 }
-
-impl NegDiag {
-    pub const fn from_i8(value: i8) -> Option<Self> {
-        contiguous::from_integer(value)
-    }
-}

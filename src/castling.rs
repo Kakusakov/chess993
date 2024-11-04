@@ -1,17 +1,15 @@
 use bitflags::bitflags;
 use crate::color::Color;
-use crate::piece::Piece;
-use crate::square::Square;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Castling {
-    Kingside,
-    Queenside,
+pub enum CastlingSide {
+    King,
+    Queen,
 }
 
 bitflags! {
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    pub struct CastlingRights: u8 {
+    #[derive(Debug, Clone, Copy)]
+    pub struct Castling: u8 {
         const WHITE_KING = 1 << 0;
         const WHITE_QUEEN = 1 << 1;
         const BLACK_KING = 1 << 2;
@@ -22,29 +20,26 @@ bitflags! {
 
         const KING = Self::WHITE_KING.bits() | Self::BLACK_KING.bits();
         const QUEEN = Self::WHITE_QUEEN.bits() | Self::BLACK_QUEEN.bits();
-
-        const NONE = 0;
-        const ALL = Self::WHITE.bits() | Self::BLACK.bits();
     }
 }
 
-impl From<Castling> for CastlingRights {
-    fn from(value: Castling) -> Self {
-        Self::from_castling(value)
+impl From<CastlingSide> for Castling {
+    fn from(value: CastlingSide) -> Self {
+        Self::from_castling_side(value)
     }
 }
 
-impl From<Color> for CastlingRights {
+impl From<Color> for Castling {
     fn from(value: Color) -> Self {
         Self::from_color(value)
     }
 }
 
-impl CastlingRights {
-    pub const fn from_castling(castling: Castling) -> Self {
-        match castling {
-            Castling::Kingside => Self::KING,
-            Castling::Queenside => Self::QUEEN,
+impl Castling {
+    pub const fn from_castling_side(side: CastlingSide) -> Self {
+        match side {
+            CastlingSide::King => Self::KING,
+            CastlingSide::Queen => Self::QUEEN,
         }
     }
     pub const fn from_color(color: Color) -> Self {
@@ -52,5 +47,11 @@ impl CastlingRights {
             Color::White => Self::WHITE,
             Color::Black => Self::BLACK,
         }
+    }
+    pub fn with_rook_updated(self, color: Color, side: CastlingSide) -> Self {
+        self & !(Castling::from(color) & Castling::from(side))
+    }
+    pub fn with_king_updated(self, color: Color) -> Self {
+        self & !Castling::from(color)
     }
 }

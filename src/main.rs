@@ -5,6 +5,8 @@ mod bitboard;
 mod color;
 mod piece;
 mod castling;
+mod en_passant;
+mod ply_clock;
 mod bitboards;
 mod position;
 mod movegen;

@@ -20,9 +20,3 @@ pub enum PosDiag {
     A7B8,
     A8A8,
 }
-
-impl PosDiag {
-    pub const fn from_i8(value: i8) -> Option<Self> {
-        contiguous::from_integer(value)
-    }
-}
